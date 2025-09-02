@@ -1,3 +1,6 @@
+""" Using File Handling to manage and store Student result Data """
+
+
 def get_grades(score) :
     if score >= 85 :
         return "A"
@@ -66,4 +69,5 @@ with open("results.txt", "w") as f:
     f.write("-"*30 + "\n")
 
 print("your result have been saved to file")
+
 
