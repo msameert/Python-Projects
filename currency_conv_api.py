@@ -9,7 +9,7 @@ def currency_converter():
 
 
     # API Endpoint (free to use)
-    api_key = "86d531b2c3bbd29e8aaac00d313f19c1"
+    # api_key = "86d531b2c3bbd29e8aaac00d313f19c1"
     url = f"https://api.exchangerate.host/convert?access_key={api_key}&from={base}&to={target}&amount={amount}"
      
 
@@ -25,5 +25,6 @@ def currency_converter():
     
     except Exception as e:
         print("Error",e)
+
 
 currency_converter()
