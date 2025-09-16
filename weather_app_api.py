@@ -8,7 +8,7 @@ def weather_app():
 
 
     #API Key
-    api_key = "0d7d0ae3772be255d131407635c43333"
+   # api_key = "0d7d0ae3772be255d131407635c43333"
     url = f"http://api.openweathermap.org/data/2.5/weather?q={city}&appid={api_key}&units=metric"
 
     try:
@@ -32,6 +32,7 @@ def weather_app():
 
     except Exception as e:
            print("Error",e)
+
 
 
 weather_app()
