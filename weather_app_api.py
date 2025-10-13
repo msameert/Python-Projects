@@ -1,4 +1,4 @@
-"""Weathe app using API"""
+"""Weather app using API"""
 
 import requests
 
@@ -36,3 +36,4 @@ def weather_app():
 
 
 weather_app()
+
