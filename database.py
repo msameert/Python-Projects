@@ -10,7 +10,7 @@ c = connection.cursor()
 # Create a Table 
 #c.execute("""CREATE TABLE students (
 #          name text,
-#          GPA real,
+#          GPA real, # DEFAULT 'undecided' - this is if we don't add something in specific row then it will show default value.
 #          semester text,
 #          department text
 #   )""")
@@ -47,4 +47,5 @@ connection.close()
 
 # To uuse database in app - we wrap the database code in functions and use it on other files - 
 # like in one file the function is show_all() which has the code of showing record -
+
 # and on the other file use function name with database like database.show_all()
