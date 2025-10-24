@@ -13,7 +13,7 @@ def analyze_sentiment(text):
     
 def news_sentiment():
     topic = input("Enter the topic you want to search about : ")
-    api_key = "pub_fcc108d382a54420ae5035906f87156b"
+    #api_key = "pub_fcc108d382a54420ae5035906f87156b"
     url = f"https://newsdata.io/api/1/latest?apikey={api_key}&q={topic}&language=en"
     response = requests.get(url)
     data = response.json()
@@ -52,4 +52,5 @@ def news_sentiment():
 news_sentiment()
  
         
+
 
