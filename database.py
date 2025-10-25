@@ -31,6 +31,7 @@ c = connection.cursor()
 # This Deletes 
 #c.execute("DELETE from students WHERE rowid IN (3, 4, 5, 6, 7)")
 
+#SELECT name FROM students WHERE name LIKE 'jo%'    - it selects names which starts from jo
 
 # This selects all - * means ALL, while rowid is numbers, also ordered the output
 c.execute("SELECT rowid,* FROM students ORDER BY semester")
@@ -49,3 +50,4 @@ connection.close()
 # like in one file the function is show_all() which has the code of showing record -
 
 # and on the other file use function name with database like database.show_all()
+
