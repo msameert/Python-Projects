@@ -5,7 +5,7 @@ class BankAccount :
     
     def __init__(self, balance, account):
         self.balance = balance
-        self.account = account
+        self.account = account  
     
     def balance2(self):
         return f"Your balance is {self.balance}"
@@ -61,6 +61,7 @@ def menu_real():
 
 
 menu_real()
+
 
 
 
