@@ -5,6 +5,7 @@ connection = sqlite3.connect('student.db')
 
 # Connecting to Cursor 
 c = connection.cursor()
+connection.execute("PRAGMA foreign_keys=ON")
 # Now we can use C as our Cursor to give commands
 
 # Create a Table 
@@ -34,12 +35,116 @@ c = connection.cursor()
 #SELECT name FROM students WHERE name LIKE 'jo%'    - it selects names which starts from jo
 
 # This selects all - * means ALL, while rowid is numbers, also ordered the output
-c.execute("SELECT rowid,* FROM students ORDER BY semester")
+#c.execute("SELECT rowid,* FROM students ORDER BY semester")
 
-print("NO. \tNAME \t\t GPA \t\tDEPARTMENT  \t SEMESTER")
-print("---------------------------------------------------------------------")
-for rowid, name, gpa, semester, department in c.fetchall():
-    print(f"{rowid} \t{name}\t\t{gpa}\t{department}\t{semester}")
+#print("NO. \tNAME \t\t GPA \t\tDEPARTMENT  \t SEMESTER")
+#print("---------------------------------------------------------------------")
+#for rowid, name, gpa, semester, department in c.fetchall():
+ #   print(f"{rowid} \t{name}\t\t{gpa}\t{department}\t{semester}")
+c.execute("""CREATE TABLE users (
+          user_id INTEGER PRIMARY KEY AUTOINCREMENT,
+          username text UNIQUE NOT NULL,
+          password_hash text NOT NULL,
+          role text NOT NULL CHECK (role IN('admin','student','faculty')),
+          is_active INTEGER DEFAULT 1,
+          created_at DATETIME DEFAULT CURRENT_TIMESTAMP NOT NULL,
+          updated_at DATETIME,
+          created_by INTEGER,
+          updated_by INTEGER,
+          Foreign key (created_by) REFERENCES users(user_id),
+          Foreign key (updated_by) REFERENCES users(user_id)
+          )""")
+
+c.execute("""CREATE TABLE departments (
+          department_id INTEGER PRIMARY KEY AUTOINCREMENT,
+          name text UNIQUE NOT NULL,
+          code text UNIQUE NOT NULL,
+          head_id INTEGER,
+          created_at DATETIME DEFAULT CURRENT_TIMESTAMP NOT NULL,
+          updated_at DATETIME,
+          Foreign key (head_id) REFERENCES faculty(faculty_id) ON DELETE SET NULL
+          )""")
+
+c.execute("""CREATE TABLE faculty (
+          faculty_id INTEGER PRIMARY KEY AUTOINCREMENT,
+          name text,
+          email text,
+          designation text,
+          is_active INTEGER DEFAULT 1,
+          user_id INTEGER,
+          department_id INTEGER,
+          Foreign key (user_id) REFERENCES users(user_id),
+          Foreign key (department_id) REFERENCES departments(department_id)
+          )""")
+
+c.execute("""CREATE TABLE semesters (
+          semester_id INTEGER PRIMARY KEY AUTOINCREMENT,
+          name text,
+          start_date text,
+          end_date text,
+          is_current INTEGER DEFAULT 1
+          )""")
+
+c.execute("""CREATE TABLE courses(
+          course_id INTEGER PRIMARY KEY AUTOINCREMENT,
+          course_code text UNIQUE NOT NULL,
+          name text,
+          credit_hours INTEGER NOT NULL,
+          department_id INTEGER,
+          faculty_id INTEGER,
+          Foreign key (department_id) REFERENCES departments(department_id),
+          Foreign key (faculty_id) REFERENCES faculty(faculty_id)
+          )""")
+
+c.execute("""CREATE TABLE students (
+          student_id INTEGER PRIMARY KEY AUTOINCREMENT,
+          student_code text UNIQUE NOT NULL,
+          first_name text,
+          last_name text,
+          email text,
+          enroll_year INTEGER NOT NULL,
+          status text DEFAULT 'active' CHECK(status IN('active', 'graduated', 'suspended', 'withdrawn')),
+          is_deleted INTEGER DEFAULT 0,
+          deleted_at DATETIME,
+          created_at DATETIME DEFAULT CURRENT_TIMESTAMP NOT NULL,
+          updated_at DATETIME,
+          user_id INTEGER,
+          department_id INTEGER,
+          current_semester_id INTEGER,
+          Foreign key (user_id) REFERENCES users(user_id),
+          Foreign key (department_id) REFERENCES departments(department_id),
+          Foreign key (current_semester_id) REFERENCES semesters(semester_id)
+          )""") 
+
+c.execute("""CREATE TABLE enrollments (
+          enrollment_id INTEGER PRIMARY KEY AUTOINCREMENT,
+          enrollment_date text,
+          status text DEFAULT 'enrolled' CHECK(status IN('enrolled','dropped','completed')),
+          dropped_at DATETIME,
+          updated_at DATETIME,
+          student_id INTEGER,
+          course_id INTEGER,
+          semester_id INTEGER,
+          Foreign key (student_id) REFERENCES students(student_id),
+          Foreign key (course_id) REFERENCES courses(course_id),
+          Foreign key (semester_id) REFERENCES semesters(semester_id)
+          )""")
+
+c.execute("""CREATE TABLE grades (
+          grade_id INTEGER PRIMARY KEY AUTOINCREMENT,
+          marks_obtained REAL CHECK (marks_obtained >= 0 AND marks_obtained <= 100),
+          grade_letter   TEXT CHECK (grade_letter IN ('A+', 'A', 'A-', 'B+', 'B', 'B-', 'C+', 'C', 'C-', 'D+', 'D', 'F')),
+          grade_points   REAL CHECK (grade_points >= 0 AND grade_points <= 4.0),
+          gpa            REAL GENERATED ALWAYS AS (grade_points) STORED,
+          remarks text,
+          graded_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+          created_at     DATETIME DEFAULT CURRENT_TIMESTAMP NOT NULL,
+          updated_at     DATETIME,
+          graded_by INTEGER,
+          enrollment_id INTEGER UNIQUE NOT NULL,
+          Foreign key (graded_by) REFERENCES faculty(faculty_id),
+          Foreign key (enrollment_id) REFERENCES enrollments(enrollment_id) ON DELETE CASCADE
+          )""")
 
 
 # this commits
@@ -50,4 +155,5 @@ connection.close()
 # like in one file the function is show_all() which has the code of showing record -
 
 # and on the other file use function name with database like database.show_all()
+
 
