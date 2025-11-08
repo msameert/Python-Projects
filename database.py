@@ -146,6 +146,36 @@ c.execute("""CREATE TABLE grades (
           Foreign key (enrollment_id) REFERENCES enrollments(enrollment_id) ON DELETE CASCADE
           )""")
 
+                            # Insert users
+#c.execute("""
+#    INSERT INTO users (username, password_hash, role)
+#    VALUES 
+#    ('admin', 'hashed_admin_pass', 'admin'),
+#    ('msameert', 'hashed_student_pass', 'student')
+#    """)
+
+                            # Insert departments
+#c.execute("""
+#          INSERT INTO departments (name,code)
+#          VALUES
+#          ('Computer Science', 'CS'),
+#          ('Software Enginnering', 'SE')
+#          """)
+c.execute("""
+          INSERT INTO users (username, password_hash,role)
+          VALUES 
+          ('zain123','pass_zain','faculty')""")
+
+c.execute("""
+                    INSERT INTO faculty (name, email, designation, user_id, department_id)
+                    VALUES (
+                        'Sir Zain',
+                        'zainmughal@gmail.com',
+                        'Professor',
+                        (SELECT user_id FROM users WHERE username = 'zain123'),
+                        (SELECT department_id FROM departments WHERE code = 'CS')
+                    )""")
+
 
 # this commits
 connection.commit()
@@ -155,5 +185,6 @@ connection.close()
 # like in one file the function is show_all() which has the code of showing record -
 
 # and on the other file use function name with database like database.show_all()
+
 
 
