@@ -175,7 +175,9 @@ c.execute("""
                         (SELECT user_id FROM users WHERE username = 'zain123'),
                         (SELECT department_id FROM departments WHERE code = 'CS')
                     )""")
-
+c.execute("""
+            INSERT INTO students (student_code, first_name, last_name, email, enroll_year, user_id,department_id)
+          VALUES ('SE-2025-0010','Muhammad','Sameer','msameert123@gmail.com','2025',(SELECT user_id FROM users WHERE username = 'msameert'),(SELECT department_id FROM departments WHERE code = 'SE'))""")
 
 # this commits
 connection.commit()
@@ -185,6 +187,7 @@ connection.close()
 # like in one file the function is show_all() which has the code of showing record -
 
 # and on the other file use function name with database like database.show_all()
+
 
 
 
