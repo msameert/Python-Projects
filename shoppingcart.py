@@ -1,4 +1,4 @@
-"mini shopping cart system that contains varablrs, lists, loops, conitions and functions"
+"mini shopping cart system that contains variablrs, lists, loops, conitions and functions"
 
 items = {
     "apple": 50,
